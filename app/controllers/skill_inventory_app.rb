@@ -1,29 +1,30 @@
-require 'models/skill_inventory'
+require "yaml/store"
 
 class SkillInventoryApp < Sinatra::Base
-  set :root, File.join(File.dirname(__FILE__), '..')
-  set :method_override, true
-
-  get '/' do
+  get "/" do
     erb :dashboard
   end
 
-  get '/skills' do
+  get "/skills/dashboard" do
+    erb :dashboard
+  end
+
+  get "/skills" do
     @skills = skill_inventory.all
     erb :index
   end
 
-  get '/skills/new' do
+  get "/skills/new" do
     erb :new
   end
 
-  post '/skills' do
+  post "/skills" do
     skill_inventory.create(params[:skill])
-    redirect '/skills'
+    redirect "/skills"
   end
 
-  get '/skills/:id' do |id|
-    @skill = skill_inventory.find(id.to_i)
+  get "/skills/:id" do |id|
+    @skill = skill_inventory.find(id)
     erb :show
   end
 
@@ -34,7 +35,7 @@ class SkillInventoryApp < Sinatra::Base
 
    put "/skills/:id" do |id|
      skill_inventory.update(params[:skill], id.to_i)
-     redirect "/skills"
+     redirect "/skills/#{id}"
    end
 
    delete "/skills/:id" do |id|
@@ -47,7 +48,11 @@ class SkillInventoryApp < Sinatra::Base
   end
 
   def skill_inventory
-    database = YAML::Store.new('db/.keep')
+    if ENV["RACK_ENV"] == "test"
+      database = Sequel.sqlite("db/skill_inventory_test.sqlite3")
+    else
+      database = Sequel.sqlite("db/skill_inventory_development.sqlite3")
+    end
     @skill_inventory ||= SkillInventory.new(database)
   end
 

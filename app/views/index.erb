@@ -1,7 +1,8 @@
 <h1 class="text-center"><u>Mad Skilz</u></h1>
 
-<% @skills.each do |skill| %>
-  <h3><%= skill.id %>: <a href="/skills/<%= skill.id %>"><%= skill.title %></a></h3>
+<ol id="skills">
+  <% @skills.each do |skill| %>
+    <li><a href="/skills/<%= skill.id %>"><%= skill.title %></a></li>
     <a href="/skills/<%= skill.id %>/edit">Edit</a>
 
     <form action="/skills/<%= skill.id %>" method="post">
@@ -10,5 +11,7 @@
     </form>
 
 <% end %>
+</ol>
 <br>
-<a href="/skills/new">New Skill</a>
+<a href="/skills/new">New Skill</a><br>
+<a href="/">Home</a>
