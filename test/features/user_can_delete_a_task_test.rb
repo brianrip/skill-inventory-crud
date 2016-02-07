@@ -12,7 +12,7 @@ class UserCanDeleteAnExistingSkill < FeatureTest
     assert page.has_content? 'Original Title'
 
     click_button 'Delete'
-
+    assert_equal '/skills', current_path
     refute page.has_content? 'Original Title'
   end
 end
